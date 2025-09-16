@@ -13,6 +13,9 @@ export default function NowPlayingComponent() {
     
     //  store methods
     const setChannels = usePlayerStore(s=> s.setChannels)
+    const setCurrentChannel = usePlayerStore(s=> s.setCurrentChannel)
+    const currentChannel = usePlayerStore(s=> s.currentChannelId)
+    const channelsList = usePlayerStore(s=> s.channels)
     // Always register the timer hook to satisfy hooks rules
     useEffect(() => {
         const list = (data as NowPlayingResponse) || [];
@@ -24,7 +27,7 @@ export default function NowPlayingComponent() {
             refetch();
         }, safeRemainingMs);
         return () => clearTimeout(timer);
-    }, [data, refetch]);
+    }, [data, refetch, currentChannel]);
     // setChannels(channels)
     useEffect(()=> {
         if(data) {
@@ -32,6 +35,8 @@ export default function NowPlayingComponent() {
                 return item.station
             })
             setChannels(channels)
+            const currentChannel = mainPlay
+            setCurrentChannel(currentChannel.station.id)
         }
     }, [data])
     if (isLoading) {
@@ -45,7 +50,8 @@ export default function NowPlayingComponent() {
         )
     }
     const nowPlaying = (data as NowPlayingResponse) || []
-    const mainPlay = nowPlaying[0] || null
+    const findedChannel = nowPlaying.length && currentChannel ? nowPlaying.find(item=> item.station.id == currentChannel) : null
+    const mainPlay = findedChannel || nowPlaying[0] || null
     if (!mainPlay) {
         return <section>موردی برای پخش وجود ندارد.</section>
     }

@@ -1,5 +1,7 @@
 "use client";
 
+import { usePlayerStore } from "@/store/player";
+
 type EqualizerProps = {
   barCount?: number;
   width?: number;
@@ -9,12 +11,13 @@ type EqualizerProps = {
 };
 
 export default function Equalizer({
-  barCount = 12,
+  barCount = 20,
   width = 2,
   height = 20,
   colorClassName = "bg-neutral-800",
   className,
 }: EqualizerProps) {
+  const {isPlaying} = usePlayerStore()
   const bars = Array.from({ length: barCount });
   return (
     <div className={`flex items-end gap-1 ${className ?? ""}`} role="img" aria-label="Equalizer animation">
@@ -27,8 +30,10 @@ export default function Equalizer({
             className={`${colorClassName} inline-block rounded-sm`}
             style={{
               width,
-              height: barHeight,
-              animation: `eq-bounce 1.2s ${delay}ms ease-in-out infinite` as unknown as string,
+              height: isPlaying ? barHeight : '30px',
+              transform: !isPlaying ? 'scaleY(0.6)' : '',
+              opacity: !isPlaying ? Math.random() : '',
+              animation: isPlaying ? `eq-bounce 1.2s ${delay}ms ease-in-out infinite` as unknown as string : '',
               transformOrigin: "center bottom",
             }}
           />

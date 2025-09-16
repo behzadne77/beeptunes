@@ -1,12 +1,16 @@
 "use client";
 import { PlayCircle, StopCircle } from "lucide-react";
 import GlassButton from "./GlassButton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { usePlayerStore } from "@/store/player";
 
 export default function PlayPauseButton () {
+    const {isPlaying} = usePlayerStore()
     const audioElementId = "main-audio-player"
-    const [isPlaying, setIsPlaying] = useState(false)
-
+    const [isPlayingState, setIsPlayingState] = useState(false)
+    useEffect(() => {
+        setIsPlayingState(isPlaying)
+    }, [isPlaying])
     const toggle = async () => {
         const el = document.getElementById(audioElementId) as HTMLAudioElement | null;
         if (!el) return;
@@ -21,10 +25,10 @@ export default function PlayPauseButton () {
                 }
                 el.muted = false;
                 await el.play();
-                setIsPlaying(true);
+                setIsPlayingState(true);
             } else {
                 el.pause();
-                setIsPlaying(false);
+                setIsPlayingState(false);
             }
         } catch (error) {
             console.log("error in toggle", error)
@@ -32,10 +36,10 @@ export default function PlayPauseButton () {
     };
     return (
         <GlassButton onClick={toggle} aria-label="توقف پخش" asCircle inset className="mx-auto bg-white/80">
-            {!isPlaying && (
+            {!isPlayingState && (
                 <PlayCircle className="h-8 w-8 text-green-500" />
             )}
-            {isPlaying && (
+            {isPlayingState && (
                 <StopCircle className="h-8 w-8 text-red-600" />
             )}
         </GlassButton>
