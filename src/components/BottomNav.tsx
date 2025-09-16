@@ -49,7 +49,7 @@ export default function BottomNav({
             >
               <div className="flex flex-col items-center justify-center gap-1">
                 <History className="h-6 w-6" />
-                <span className="text-[11px]">هیستوری</span>
+                <span className="text-[11px]">تاریخچه</span>
               </div>
             </GlassButton>
           </div>

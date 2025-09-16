@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useNowPlaying } from "@/queries/nowPlaying";
 import { NowPlayingResponse } from "@/types/play";
 import Image from "next/image";
@@ -7,9 +8,7 @@ import Equalizer from "./Equalizer";
 import HiddenAudioPlayer from "./HiddenAudioPlayer";
 
 export default function NowPlayingComponent() {
-    const {data, isLoading, error } = useNowPlaying({
-        refetchInterval: 60000
-    })
+    const {data, isLoading, error, refetch } = useNowPlaying()
     if (isLoading) {
         return (
             <section>در حال بارگذاری ...</section>
@@ -20,7 +19,7 @@ export default function NowPlayingComponent() {
             <section>مشکل در دریافت اطلاعات. دوباره تلاش نمایید.</section>
         )
     }
-    const nowPlaying = data as NowPlayingResponse || []
+    const nowPlaying = (data as NowPlayingResponse) || []
     const mainPlay = nowPlaying[0] || null
     if (!mainPlay) {
         return <section>موردی برای پخش وجود ندارد.</section>
@@ -30,6 +29,16 @@ export default function NowPlayingComponent() {
     const title = mainPlay.now_playing.song.title;
     const artist = mainPlay.now_playing.song.artist;
     const streamUrl = mainPlay.station.listen_url;
+
+    // Dynamically refetch at track change time
+    useEffect(() => {
+        const remainingSec = mainPlay.now_playing?.remaining ?? 0;
+        const safeRemainingMs = Math.max(remainingSec * 1000 - 250, 500); // small headstart, min 500ms
+        const timer = setTimeout(() => {
+            refetch();
+        }, safeRemainingMs);
+        return () => clearTimeout(timer);
+    }, [mainPlay?.now_playing?.played_at, mainPlay?.now_playing?.remaining, refetch]);
 
     return (
         <section className="relative min-h-dvh w-full overflow-hidden">
