@@ -41,7 +41,7 @@ export default function NowPlayingComponent() {
                         alt={title}
                         fill
                         priority
-                        className="object-cover blur-xl scale-110 opacity-40"
+                        className="object-cover blur-[2px] grayscale scale-110 opacity-40"
                     />
                 ) : (
                     <div className="w-full h-full bg-gradient-to-br from-neutral-200 to-neutral-400" />
