@@ -9,6 +9,19 @@ import HiddenAudioPlayer from "./HiddenAudioPlayer";
 
 export default function NowPlayingComponent() {
     const {data, isLoading, error, refetch } = useNowPlaying()
+
+    // Always register the timer hook to satisfy hooks rules
+    useEffect(() => {
+        const list = (data as NowPlayingResponse) || [];
+        const current = list[0];
+        if (!current) return;
+        const remainingSec = current.now_playing?.remaining ?? 0;
+        const safeRemainingMs = Math.max(remainingSec * 1000 - 250, 500);
+        const timer = setTimeout(() => {
+            refetch();
+        }, safeRemainingMs);
+        return () => clearTimeout(timer);
+    }, [data, refetch]);
     if (isLoading) {
         return (
             <section>در حال بارگذاری ...</section>
@@ -30,15 +43,7 @@ export default function NowPlayingComponent() {
     const artist = mainPlay.now_playing.song.artist;
     const streamUrl = mainPlay.station.listen_url;
 
-    // Dynamically refetch at track change time
-    useEffect(() => {
-        const remainingSec = mainPlay.now_playing?.remaining ?? 0;
-        const safeRemainingMs = Math.max(remainingSec * 1000 - 250, 500); // small headstart, min 500ms
-        const timer = setTimeout(() => {
-            refetch();
-        }, safeRemainingMs);
-        return () => clearTimeout(timer);
-    }, [mainPlay?.now_playing?.played_at, mainPlay?.now_playing?.remaining, refetch]);
+    // (timer effect moved above to avoid conditional hooks)
 
     return (
         <section className="relative min-h-dvh w-full overflow-hidden">

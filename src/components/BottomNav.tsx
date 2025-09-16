@@ -1,19 +1,17 @@
 "use client";
 
 import React from "react";
-import { History, ListMusic, StopCircle } from "lucide-react";
+import { History, ListMusic } from "lucide-react";
 import GlassButton from "./GlassButton";
 import PlayPauseButton from "./PlayPauseButton";
 
 type BottomNavProps = {
   onShowChannels?: () => void;
-  onStop?: () => void;
   onShowHistory?: () => void;
 };
 
 export default function BottomNav({
   onShowChannels,
-  onStop,
   onShowHistory,
 }: BottomNavProps) {
   const handleShowChannels = () => (onShowChannels ? onShowChannels() : console.log("show channels"));  

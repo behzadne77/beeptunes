@@ -10,7 +10,6 @@ type SplashScreenProps = {
 };
 
 export default function SplashScreen({
-  logoSrc = "https://www.beeptunes.com/assets/images/logo.svg",
   appName = "خوش آمدید",
   poweredByText = "برگرفته شده از ای پی آی های بیپ‌تونز",
   className,
