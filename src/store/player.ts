@@ -12,7 +12,7 @@ export type ChannelMeta = {
 type PlayerState = {
   channels: station[];
   currentChannelId: number | null;
-  nowPlayingByChannel: Record<string, nowPlayingItem | undefined>;
+  nowPlayingByChannel: nowPlayingItem | undefined;
   isLoading: boolean;
   isPlaying: boolean;
   error?: string | null;
@@ -21,7 +21,7 @@ type PlayerState = {
 type PlayerActions = {
   setChannels: (channels: station[]) => void;
   setCurrentChannel: (channelId: number) => void;
-  setNowPlaying: (channelId: string, data: nowPlayingItem | undefined) => void;
+  setNowPlaying: (data: nowPlayingItem | undefined) => void;
   setLoading: (loading: boolean) => void;
   setError: (message: string | null) => void;
   clear: () => void;
@@ -31,20 +31,19 @@ type PlayerActions = {
 export const usePlayerStore = create<PlayerState & PlayerActions>((set) => ({
   channels: [],
   currentChannelId: null,
-  nowPlayingByChannel: {},
+  nowPlayingByChannel: undefined,
   isLoading: false,
   error: null,
   isPlaying: false,
 
   setChannels: (channels) => set({ channels }),
   setCurrentChannel: (channelId) => set({ currentChannelId: channelId }),
-  setNowPlaying: (channelId, data) =>
-    set((state) => ({ nowPlayingByChannel: { ...state.nowPlayingByChannel, [channelId]: data } })),
+  setNowPlaying: (data) => set({ nowPlayingByChannel: data  }),
 
   setLoading: (loading) => set({ isLoading: loading }),
   setError: (message) => set({ error: message }),
   setIsPlaying: (isPlaying) => set({ isPlaying }),
-  clear: () => set({ channels: [], currentChannelId: null, nowPlayingByChannel: {}, isLoading: false, error: null, isPlaying: false }),
+  clear: () => set({ channels: [], currentChannelId: null, nowPlayingByChannel: undefined, isLoading: false, error: null, isPlaying: false }),
 }));
 
 

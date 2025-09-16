@@ -16,4 +16,5 @@ export type song = {
     title: string;
     album: string;
     genre: string;
+    duration: number;
 }

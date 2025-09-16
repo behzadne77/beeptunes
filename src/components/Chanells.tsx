@@ -18,6 +18,8 @@ export default function ChannelsComponent () {
         if (closeButton)
             closeButton.click()
     }
+    const buttonClass = "w-full border border-gray-300 rounded-lg p-3 flex items-center gap-2"
+    const activeButtonClass = "text-blue-900 bg-blue-200 border-none"
     return (
         <section>
             <GlassButton
@@ -41,17 +43,17 @@ export default function ChannelsComponent () {
                         <DrawerHeader>
                             <DrawerTitle className="text-xl">لیست کانال ها</DrawerTitle>
                         </DrawerHeader>
-                        <section className="mt-4 grid grid-cols-1 gap-6">
+                        <section className="mt-4 mb-8 grid grid-cols-2 gap-6 gap-y-3">
                             {channels.map(channel => (
                                 <section key={channel.id}>
                                 {channelsPerisanConvert(channel.shortcode) && (
-                                    <section 
-                                    className={`flex items-center gap-2 ${currentChannelId == channel.id ? 'text-blue-500' : ''}`}
+                                    <button
+                                    className={`${buttonClass} ${currentChannelId == channel.id ? activeButtonClass : ''}`}
                                     onClick={() => changeActiveChannel(channel.id)}
                                     >
-                                        <h2 className="text-base">{channelsPerisanConvert(channel.shortcode)}</h2>
+                                        <h2 className="text-sm">{channelsPerisanConvert(channel.shortcode)}</h2>
                                         <MoveUpLeft size={14} />
-                                    </section>
+                                    </button>
                                 )}
                                 </section>
                             ))}

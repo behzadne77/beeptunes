@@ -19,6 +19,18 @@ const channelsPerisanNames = [
     {
         key: "upbeats",
         value: "رادیو اوج"
+    },
+    {
+        key: "folk_musics",
+        value: "رادیو محلی"
+    },
+    {
+        key: "fusionـmusic",
+        value: "رادیو آونگ"
+    },
+    {
+        key: "classic",
+        value: "رادیو هارمونی"
     }
 ]
 export function channelsPerisanConvert(channel_shortcode: string) {

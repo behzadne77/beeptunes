@@ -15,7 +15,7 @@ export default function NowPlayingComponent() {
     const setChannels = usePlayerStore(s=> s.setChannels)
     const setCurrentChannel = usePlayerStore(s=> s.setCurrentChannel)
     const currentChannel = usePlayerStore(s=> s.currentChannelId)
-    const channelsList = usePlayerStore(s=> s.channels)
+    const nowPlayingStore = usePlayerStore(s=> s.setNowPlaying)
     // Always register the timer hook to satisfy hooks rules
     useEffect(() => {
         const list = (data as NowPlayingResponse) || [];
@@ -39,6 +39,13 @@ export default function NowPlayingComponent() {
             setCurrentChannel(currentChannel.station.id)
         }
     }, [data])
+    useEffect(()=> {
+        if (data) {
+            if(mainPlay) {
+                nowPlayingStore(mainPlay)
+            }
+        }
+    }, [currentChannel, data])
     if (isLoading) {
         return (
             <section>در حال بارگذاری ...</section>
