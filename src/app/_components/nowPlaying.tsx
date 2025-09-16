@@ -6,10 +6,13 @@ import { NowPlayingResponse } from "@/types/play";
 import Image from "next/image";
 import Equalizer from "./Equalizer";
 import HiddenAudioPlayer from "./HiddenAudioPlayer";
+import { usePlayerStore } from "@/store/player";
 
 export default function NowPlayingComponent() {
     const {data, isLoading, error, refetch } = useNowPlaying()
-
+    
+    //  store methods
+    const setChannels = usePlayerStore(s=> s.setChannels)
     // Always register the timer hook to satisfy hooks rules
     useEffect(() => {
         const list = (data as NowPlayingResponse) || [];
@@ -22,6 +25,15 @@ export default function NowPlayingComponent() {
         }, safeRemainingMs);
         return () => clearTimeout(timer);
     }, [data, refetch]);
+    // setChannels(channels)
+    useEffect(()=> {
+        if(data) {
+            const channels = nowPlaying.map(item=> {
+                return item.station
+            })
+            setChannels(channels)
+        }
+    }, [data])
     if (isLoading) {
         return (
             <section>در حال بارگذاری ...</section>
@@ -37,13 +49,12 @@ export default function NowPlayingComponent() {
     if (!mainPlay) {
         return <section>موردی برای پخش وجود ندارد.</section>
     }
-
     const cover = mainPlay.now_playing.song.art;
     const title = mainPlay.now_playing.song.title;
     const artist = mainPlay.now_playing.song.artist;
     const streamUrl = mainPlay.station.listen_url;
-
-    // (timer effect moved above to avoid conditional hooks)
+    // set data to store
+    // setCurrentChannel(mainPlay.station.id)
 
     return (
         <section className="relative min-h-dvh w-full overflow-hidden">
